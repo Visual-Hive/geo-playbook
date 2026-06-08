@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Get Quoted by the Machines — The GEO Playbook · Visual Hive</title>
+<meta name="description" content="SEO got you found. GEO gets you quoted. An interactive field guide to how ChatGPT, Claude and Perplexity decide what to cite — and how to be the answer. Built by Visual Hive.">
+
+<!-- Yes, this page is optimised to its own playbook. Hello, crawlers. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The GEO Playbook: How AI Answer Engines Decide What to Cite",
+  "about": "Generative Engine Optimisation for ChatGPT, Claude and Perplexity",
+  "author": {"@type":"Organization","name":"Visual Hive","url":"https://visualhive.co"},
+  "publisher": {"@type":"Organization","name":"Visual Hive"},
+  "inLanguage": "en",
+  "abstract": "Across major 2026 studies, only ~12.9% of AI citations come from top-ranked organic pages; ~85% of brand mentions in AI answers come from third-party sources; and front-loaded, sourced, statistic-rich content is cited up to 40% more (Princeton/Georgia Tech GEO, ACM KDD 2024)."
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink:#0a0a0c; --ink2:#121217; --ink3:#1a1a21;
+  --paper:#f3eee4; --muted:#8b8b96; --faint:#5c5c66;
+  --line:rgba(243,238,228,.12); --line2:rgba(243,238,228,.2);
+  --signal:#ffce3a; --hot:#ff5b38; --cyan:#57d2e6;
+  --claude:#d97757; --gpt:#1fbd7e; --pplx:#22b5cd;
+  --serif:"Fraunces",Georgia,serif;
+  --sans:"Hanken Grotesk",-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink); color:var(--paper); font-family:var(--sans);
+  font-size:18px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* atmosphere: grain + grid */
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px; opacity:.35;
+  mask-image:radial-gradient(ellipse 100% 70% at 50% 0%,#000 30%,transparent 80%);
+}
+body::after{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.045;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap{position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 24px}
+section{padding:80px 0; position:relative}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--signal); display:flex; align-items:center; gap:10px}
+.eyebrow::before{content:""; width:28px; height:1px; background:var(--signal)}
+h2{font-family:var(--serif); font-weight:600; font-size:clamp(30px,5vw,52px); line-height:1.02; letter-spacing:-.02em; margin:18px 0 28px}
+h2 em{font-style:italic; color:var(--signal)}
+p.lead{font-size:20px; color:#d8d2c6; max-width:62ch}
+a{color:inherit}
+.mono{font-family:var(--mono)}
+
+/* NAV */
+nav{position:fixed; top:0; left:0; right:0; z-index:50; display:flex; justify-content:space-between; align-items:center;
+  padding:16px 24px; backdrop-filter:blur(10px); background:rgba(10,10,12,.6); border-bottom:1px solid var(--line)}
+.logo{font-family:var(--mono); font-weight:700; letter-spacing:.04em; font-size:15px}
+.logo b{color:var(--signal)}
+.nav-cta{font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:.14em; padding:8px 16px; border:1px solid var(--line2); border-radius:100px; text-decoration:none; transition:.25s}
+.nav-cta:hover{background:var(--signal); color:#000; border-color:var(--signal)}
+
+/* HERO */
+.hero{min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding-top:80px}
+.hero h1{font-family:var(--serif); font-weight:400; font-size:clamp(44px,9vw,108px); line-height:.95; letter-spacing:-.03em}
+.hero h1 .strike{color:var(--faint); position:relative; font-style:italic}
+.hero h1 .strike::after{content:""; position:absolute; left:-2%; right:-2%; top:52%; height:3px; background:var(--hot); transform:scaleX(0); transform-origin:left; animation:strike 1s 1.1s forwards cubic-bezier(.7,0,.3,1)}
+@keyframes strike{to{transform:scaleX(1)}}
+.hero h1 .pop{color:var(--signal); font-weight:700}
+.hero-sub{margin-top:34px; max-width:54ch; font-size:21px; color:#d8d2c6}
+.terminal{font-family:var(--mono); font-size:14px; color:var(--cyan); margin-top:40px; border-left:2px solid var(--signal); padding:4px 0 4px 16px}
+.terminal .q{color:var(--muted)}
+.cursor{display:inline-block; width:9px; height:1.05em; background:var(--signal); vertical-align:-2px; animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.scrollcue{margin-top:64px; font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:10px}
+.scrollcue span{animation:bob 1.6s infinite}
+@keyframes bob{50%{transform:translateY(5px)}}
+
+/* reveal */
+.reveal{opacity:0; transform:translateY(28px); transition:.8s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1; transform:none}
+
+/* PIPELINE SIM */
+.sim{background:linear-gradient(180deg,var(--ink2),#0d0d11); border:1px solid var(--line); border-radius:18px; padding:30px; margin-top:34px}
+.sim-query{font-family:var(--mono); font-size:15px; background:#000; border:1px solid var(--line2); border-radius:10px; padding:14px 18px; display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.sim-query .label{color:var(--signal)}
+.sim-stages{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:22px}
+.stage{border:1px solid var(--line); border-radius:12px; padding:14px; min-height:230px; background:rgba(0,0,0,.25)}
+.stage h4{font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; display:flex; justify-content:space-between}
+.stage .n{color:var(--signal)}
+.stage .desc{font-size:12px; color:var(--faint); margin-bottom:14px; min-height:32px; font-family:var(--mono)}
+.chip{font-family:var(--mono); font-size:12.5px; padding:8px 11px; border-radius:8px; border:1px solid var(--line2); margin-bottom:8px; display:flex; flex-direction:column; gap:3px; opacity:0; transform:translateX(-10px); transition:.4s}
+.chip.show{opacity:1; transform:none}
+.chip .src{display:flex; align-items:center; gap:7px; font-weight:500}
+.chip .dot{width:7px; height:7px; border-radius:50%; background:var(--muted); flex:none}
+.chip.dropped{opacity:.4; border-style:dashed}
+.chip.dropped .src{text-decoration:line-through; text-decoration-color:var(--hot)}
+.chip .why{font-size:10.5px; color:var(--hot)}
+.chip.kept{border-color:var(--cyan)}
+.chip.kept .dot{background:var(--cyan)}
+.chip.cited{border-color:var(--signal); background:rgba(255,206,58,.08); box-shadow:0 0 0 1px var(--signal)}
+.chip.cited .dot{background:var(--signal)}
+.chip.cited .why{color:var(--signal)}
+.answer{margin-top:18px; border-top:1px dashed var(--line2); padding-top:16px; font-size:15px; color:#d8d2c6; min-height:48px; opacity:0; transition:.6s}
+.answer.show{opacity:1}
+.answer .cite{color:var(--signal); font-family:var(--mono); font-size:12px}
+.runbtn{font-family:var(--mono); font-size:13px; letter-spacing:.06em; margin-top:20px; background:var(--signal); color:#000; border:none; padding:13px 26px; border-radius:100px; cursor:pointer; font-weight:700; transition:.2s}
+.runbtn:hover{transform:translateY(-2px); box-shadow:0 8px 24px rgba(255,206,58,.3)}
+.runbtn:disabled{opacity:.5; cursor:wait; transform:none; box-shadow:none}
+
+/* PLAYS GRID */
+.tracker{font-family:var(--mono); font-size:13px; color:var(--muted); margin-top:14px}
+.tracker b{color:var(--signal)}
+.plays{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:30px}
+.plays{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:30px; align-items:stretch}
+.card{perspective:1200px; cursor:pointer; display:flex}
+.card-in{position:relative; width:100%; display:grid; transition:transform .6s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d}
+.card.flip .card-in{transform:rotateY(180deg)}
+.face{grid-area:1/1; backface-visibility:hidden; border:1px solid var(--line2); border-radius:14px; padding:18px; display:flex; flex-direction:column; min-height:240px}
+.front{background:linear-gradient(160deg,var(--ink3),var(--ink2))}
+.front .num{font-family:var(--mono); font-size:12px; color:var(--signal)}
+.front .t{font-family:var(--serif); font-size:23px; line-height:1.08; margin-top:auto; font-weight:600}
+.front .tap{font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--faint); margin-top:12px}
+.back{background:linear-gradient(160deg,#15150f,var(--ink2)); transform:rotateY(180deg); border-color:var(--signal)}
+.back .stat{font-family:var(--serif); font-size:30px; font-weight:700; color:var(--signal); line-height:1; margin-bottom:6px}
+.back .claim{font-size:12.5px; line-height:1.4; margin:0 0 8px; color:#d8d2c6}
+.back .do{font-family:var(--mono); font-size:11px; line-height:1.4; color:var(--cyan); margin-top:auto; border-top:1px solid var(--line); padding-top:8px}
+.back .do b{color:var(--paper)}
+.back .src{font-family:var(--mono); font-size:9.5px; color:var(--faint); margin-top:6px}
+
+/* ENGINES */
+.engtabs{display:flex; gap:10px; margin-top:30px; flex-wrap:wrap}
+.engtab{font-family:var(--mono); font-size:13px; padding:11px 20px; border:1px solid var(--line2); border-radius:100px; background:none; color:var(--muted); cursor:pointer; transition:.25s}
+.engtab[data-on="true"]{color:#000; font-weight:700}
+.engtab.claude[data-on="true"]{background:var(--claude); border-color:var(--claude)}
+.engtab.gpt[data-on="true"]{background:var(--gpt); border-color:var(--gpt)}
+.engtab.pplx[data-on="true"]{background:var(--pplx); border-color:var(--pplx)}
+.engpanel{margin-top:24px; border:1px solid var(--line); border-left-width:4px; border-radius:14px; padding:30px; background:rgba(0,0,0,.25); display:none}
+.engpanel.on{display:block; animation:fade .5s}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}}
+.engpanel.claude{border-left-color:var(--claude)}
+.engpanel.gpt{border-left-color:var(--gpt)}
+.engpanel.pplx{border-left-color:var(--pplx)}
+.engpanel h3{font-family:var(--serif); font-size:30px; font-weight:600}
+.engpanel .tag{font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase}
+.claude .tag{color:var(--claude)} .gpt .tag{color:var(--gpt)} .pplx .tag{color:var(--pplx)}
+.engrows{margin-top:20px; display:grid; gap:14px}
+.engrow{display:grid; grid-template-columns:130px 1fr; gap:16px; padding-bottom:14px; border-bottom:1px solid var(--line); font-size:15px}
+.engrow .k{font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); padding-top:3px}
+.oneliner{margin-top:20px; font-family:var(--serif); font-style:italic; font-size:21px; line-height:1.3}
+
+/* PARADOX */
+.split{display:flex; height:80px; border-radius:12px; overflow:hidden; margin-top:30px; border:1px solid var(--line2); font-family:var(--mono)}
+.split .seg{display:flex; flex-direction:column; justify-content:center; padding:0 22px; transition:.8s width}
+.split .own{width:0; background:var(--ink3); color:var(--muted)}
+.split .theirs{width:100%; background:linear-gradient(90deg,#1a1208,#2a1d0a); color:var(--signal)}
+.split.in .own{width:15%} .split.in .theirs{width:85%}
+.split .pct{font-size:24px; font-weight:700}
+.split .lbl{font-size:10px; letter-spacing:.12em; text-transform:uppercase; opacity:.8}
+.flipword{cursor:pointer; border-bottom:2px dashed var(--hot); white-space:nowrap}
+
+/* QUIZ */
+.quiz{background:linear-gradient(180deg,var(--ink2),#0d0d11); border:1px solid var(--line); border-radius:18px; padding:30px; margin-top:30px}
+.q-item{display:flex; justify-content:space-between; align-items:center; gap:16px; padding:15px 0; border-bottom:1px solid var(--line); font-size:16px}
+.q-item:last-of-type{border:none}
+.toggle{font-family:var(--mono); font-size:12px; border:1px solid var(--line2); background:none; color:var(--muted); border-radius:100px; padding:8px 18px; cursor:pointer; transition:.2s; flex:none}
+.toggle[data-yes="true"]{background:var(--gpt); color:#000; border-color:var(--gpt); font-weight:700}
+.gauge{margin-top:26px; text-align:center}
+.gauge .score{font-family:var(--serif); font-size:64px; font-weight:700; line-height:1; color:var(--signal); transition:.3s}
+.gauge .bar{height:8px; background:var(--ink3); border-radius:100px; margin:16px 0; overflow:hidden}
+.gauge .fill{height:100%; width:0; background:linear-gradient(90deg,var(--hot),var(--signal),var(--gpt)); transition:.5s; border-radius:100px}
+.gauge .verdict{font-family:var(--mono); font-size:14px; color:#d8d2c6; min-height:42px}
+
+/* HONESTY */
+.honesty summary{cursor:pointer; font-family:var(--mono); font-size:14px; color:var(--signal); list-style:none; padding:16px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+.honesty summary::-webkit-details-marker{display:none}
+.honesty summary::before{content:"▸ "; transition:.2s}
+.honesty[open] summary::before{content:"▾ "}
+.honesty .body{padding:20px 0; color:var(--muted); font-size:15px; max-width:64ch}
+.method .tier{display:flex; align-items:baseline; gap:12px; margin:22px 0 8px}
+.method .badge{font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.04em; padding:4px 10px; border-radius:6px}
+.method .badge.gold{background:rgba(255,206,58,.14); color:var(--signal); border:1px solid var(--signal)}
+.method .badge.data{background:rgba(87,210,230,.12); color:var(--cyan); border:1px solid rgba(87,210,230,.5)}
+.method .badge.vendor{background:rgba(255,91,56,.12); color:var(--hot); border:1px solid rgba(255,91,56,.5)}
+.method .tdesc{font-family:var(--mono); font-size:11px; color:var(--faint); letter-spacing:.04em}
+.method ul{list-style:none; padding:0; margin:0}
+.method li{font-size:14px; line-height:1.5; padding:9px 0 9px 18px; border-bottom:1px solid var(--line); position:relative; color:#c9c4ba}
+.method li::before{content:"›"; position:absolute; left:0; color:var(--faint)}
+.method li a{color:var(--cyan); text-decoration:underline; text-decoration-color:rgba(87,210,230,.35); text-underline-offset:2px; transition:.2s}
+.method li a:hover{text-decoration-color:var(--cyan)}
+.method .reviewed{font-family:var(--mono); font-size:11px; color:var(--faint); margin-top:20px; font-style:italic}
+
+/* CTA */
+.cta{text-align:center; padding:110px 0}
+.cta h2{font-size:clamp(34px,6vw,64px)}
+.bigbtn{display:inline-block; font-family:var(--mono); font-weight:700; font-size:15px; letter-spacing:.04em; background:var(--signal); color:#000; text-decoration:none; padding:18px 40px; border-radius:100px; margin-top:14px; transition:.25s}
+.bigbtn:hover{transform:translateY(-3px); box-shadow:0 12px 36px rgba(255,206,58,.35)}
+.builtto{font-family:var(--mono); font-size:12px; color:var(--faint); margin-top:50px; line-height:1.8; border:1px dashed var(--line2); border-radius:12px; padding:18px; max-width:60ch; margin-left:auto; margin-right:auto}
+.builtto b{color:var(--cyan)}
+footer{border-top:1px solid var(--line); padding:30px 0; font-family:var(--mono); font-size:12px; color:var(--faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px}
+footer .srclinks{max-width:62ch; line-height:1.9}
+footer .srclinks a{color:var(--muted); text-decoration:underline; text-decoration-color:var(--line2); text-underline-offset:3px; transition:.2s}
+footer .srclinks a:hover{color:var(--signal); text-decoration-color:var(--signal)}
+footer a{color:var(--muted); text-decoration:none; border-bottom:1px dotted var(--line2); transition:.2s}
+footer a:hover{color:var(--signal); border-bottom-color:var(--signal)}
+
+@media(max-width:760px){
+  .sim-stages{grid-template-columns:1fr} .plays{grid-template-columns:1fr}
+  .engrow{grid-template-columns:1fr; gap:4px}
+  section{padding:60px 0}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important; transition-duration:.01ms!important}}
+
+/* GATE MODAL */
+.modal-overlay{position:fixed; inset:0; z-index:100; background:rgba(5,5,7,.78); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:.3s}
+.modal-overlay.open{opacity:1; pointer-events:auto}
+.modal{position:relative; max-width:520px; width:100%; background:linear-gradient(165deg,#16140d,var(--ink2)); border:1px solid var(--signal); border-radius:18px; padding:38px 34px; transform:scale(.92) translateY(14px); transition:.35s cubic-bezier(.2,.8,.2,1); overflow:hidden}
+.modal-overlay.open .modal{transform:none}
+.modal .stamp{position:absolute; top:24px; right:-44px; transform:rotate(34deg); background:var(--hot); color:#000; font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.18em; padding:6px 56px}
+.modal .x{position:absolute; top:14px; left:16px; font-family:var(--mono); font-size:18px; color:var(--muted); background:none; border:none; cursor:pointer; transition:.2s}
+.modal .x:hover{color:var(--paper)}
+.modal .req{font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--hot); margin-bottom:14px}
+.modal h3{font-family:var(--serif); font-size:38px; font-weight:600; line-height:1; margin-bottom:16px}
+.modal p{font-size:16px; color:#d8d2c6; line-height:1.55}
+.modal .book{display:block; text-align:center; font-family:var(--mono); font-weight:700; font-size:14px; letter-spacing:.04em; background:var(--signal); color:#000; text-decoration:none; padding:15px; border-radius:100px; margin-top:24px; transition:.25s}
+.modal .book:hover{transform:translateY(-2px); box-shadow:0 10px 30px rgba(255,206,58,.35)}
+.modal .vet{font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:20px; text-align:center}
+.modal .lis{display:flex; gap:10px; justify-content:center; margin-top:10px; flex-wrap:wrap}
+.modal .li{font-family:var(--mono); font-size:12px; text-decoration:none; color:var(--cyan); border:1px solid var(--line2); border-radius:100px; padding:8px 16px; transition:.2s}
+.modal .li:hover{border-color:var(--cyan); background:rgba(87,210,230,.08)}
+.modal .smallprint{font-family:var(--mono); font-size:11px; color:var(--faint); margin-top:22px; text-align:center; font-style:italic}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">VISUAL<b>·</b>HIVE</div>
+  <a class="nav-cta" href="#measure">Measure my site →</a>
+</nav>
+
+<header class="hero wrap">
+  <div class="eyebrow">The GEO Playbook · 2026 field edition</div>
+  <h1>SEO got you <span class="strike">found</span>.<br>GEO gets you <span class="pop">quoted</span>.</h1>
+  <p class="hero-sub">The search box is being replaced by an answer. Nobody scrolls ten blue links when a machine just <em>tells them</em>. The new game isn't ranking — it's being the sentence the AI repeats. Here's how that decision actually gets made.</p>
+  <div class="terminal">
+    <span class="q">user ›</span> best event intelligence platform<br>
+    <span style="color:var(--signal)">engine ›</span> retrieving 47 sources · reranking · citing 3<span class="cursor"></span>
+  </div>
+  <div class="scrollcue"><span>↓</span> play the engine</div>
+</header>
+
+<!-- PIPELINE SIM -->
+<section class="wrap">
+  <div class="reveal">
+    <div class="eyebrow">Exhibit A · the machine's decision</div>
+    <h2>Watch an answer engine <em>decide</em>.</h2>
+    <p class="lead">Every engine does three things to your page: <b>retrieve</b> it, <b>rerank</b> it for quality, then <b>generate</b> one answer and cite a handful of survivors. Most SEO only helps the first step. Hit run and watch where pages die.</p>
+  </div>
+  <div class="sim reveal">
+    <div class="sim-query"><span class="label">QUERY ›</span> <span>"which platform gives the best b2b event attendee intelligence?"</span></div>
+    <div class="sim-stages">
+      <div class="stage"><h4><span>1 · Retrieve</span><span class="n" id="c1">0</span></h4><div class="desc">Pull candidates from the index (Brave / Bing / live web).</div><div id="stage1"></div></div>
+      <div class="stage"><h4><span>2 · Rerank</span><span class="n" id="c2">0</span></h4><div class="desc">Score for extractability, sources, freshness, tone. Most die here.</div><div id="stage2"></div></div>
+      <div class="stage"><h4><span>3 · Cite</span><span class="n" id="c3">0</span></h4><div class="desc">Synthesise one answer. Quote the survivors.</div><div id="stage3"></div></div>
+    </div>
+    <div class="answer" id="answer"></div>
+    <button class="runbtn" id="run">▶ Run the engine</button>
+  </div>
+</section>
+
+<!-- PLAYS -->
+<section class="wrap">
+  <div class="reveal">
+    <div class="eyebrow">Exhibit B · the 9 rules that survive reranking</div>
+    <h2>Flip a card. <em>Unlock</em> a rule.</h2>
+    <p class="lead">Nine confirmed patterns, each one a card. Tap to turn it over. This is the whole playbook — snackable, sourced, and yes, you can steal these for your own posts.</p>
+    <div class="tracker">PLAYS UNLOCKED · <b id="unlocked">0</b>/9 <span id="alldone" style="color:var(--gpt);display:none">— you're thinking like an answer engine now.</span></div>
+  </div>
+  <div class="plays reveal" id="plays"></div>
+</section>
+
+<!-- ENGINES -->
+<section class="wrap">
+  <div class="reveal">
+    <div class="eyebrow">Exhibit C · they are not the same machine</div>
+    <h2>Three engines. Three <em>different</em> brains.</h2>
+    <p class="lead">Different backends, different taste. The same page can be gospel to one and invisible to another. Pick a brain.</p>
+    <div class="engtabs">
+      <button class="engtab claude" data-eng="claude" data-on="true">◆ Claude</button>
+      <button class="engtab gpt" data-eng="gpt" data-on="false">◆ ChatGPT</button>
+      <button class="engtab pplx" data-eng="pplx" data-on="false">◆ Perplexity</button>
+    </div>
+  </div>
+  <div id="engwrap" class="reveal"></div>
+</section>
+
+<!-- PARADOX -->
+<section class="wrap">
+  <div class="reveal">
+    <div class="eyebrow">Exhibit D · the uncomfortable truth</div>
+    <h2>You're cited most where you control <em>least</em>.</h2>
+    <p class="lead">Roughly <b>85% of brand mentions in AI answers come from sites you don't own</b> (AirOps, 2026). And here's the SEO/GEO break: a link used to count regardless of the words around it. Now the engine <em>reads the sentence you're sitting in</em>.</p>
+  </div>
+  <div class="split reveal" id="split">
+    <div class="seg own"><span class="pct">15%</span><span class="lbl">your own site</span></div>
+    <div class="seg theirs"><span class="pct">85%</span><span class="lbl">third-party sources you can only influence</span></div>
+  </div>
+  <p class="lead reveal" style="margin-top:26px">
+    So the same Reddit mention can be SEO-gold and GEO-poison. The engine ingests <b>sentiment</b>, not just presence, and applies near <b>"majority rule"</b>: if enough independent sources describe you the same way, it reports it as fact. Tap the sentence to see what you actually write —
+  </p>
+  <p class="reveal" style="font-family:var(--serif);font-size:clamp(22px,4vw,34px);line-height:1.3;margin-top:18px">
+    "<span id="fw" class="flipword">Erleah is a leading event-intelligence platform</span>" — said by <em>someone else</em>, about you, in words you never approved.
+  </p>
+  <p class="mono reveal" style="font-size:13px;color:var(--faint);margin-top:14px">The one thing you <span style="color:var(--cyan)">do</span> control: that everything you own — site, schema, directory profiles — says one identical thing, so the "majority" has something consistent to converge on.</p>
+</section>
+
+<!-- QUIZ -->
+<section class="wrap" id="measure">
+  <div class="reveal">
+    <div class="eyebrow">Exhibit E · the 30-second self-check</div>
+    <h2>Would a machine <em>quote you</em> today?</h2>
+    <p class="lead">Five honest yes/no questions. No email wall. Tap your answers.</p>
+  </div>
+  <div class="quiz reveal" id="quiz">
+    <div class="q-item"><span>Does your key answer land in the <b>first 100 words</b> — before the throat-clearing?</span><button class="toggle" data-yes="false">No</button></div>
+    <div class="q-item"><span>Do your claims carry <b>real numbers</b>, with a year and a source, in the same sentence?</span><button class="toggle" data-yes="false">No</button></div>
+    <div class="q-item"><span>Do <b>third parties</b> (Reddit, G2, press) describe you — consistently — not just your own site?</span><button class="toggle" data-yes="false">No</button></div>
+    <div class="q-item"><span>Is your category label <b>identical</b> across homepage, schema and directories?</span><button class="toggle" data-yes="false">No</button></div>
+    <div class="q-item"><span>Are you actually <b>indexed in Brave</b> (not just Google) for your core terms?</span><button class="toggle" data-yes="false">No</button></div>
+    <div class="gauge">
+      <div class="score" id="score">0</div>
+      <div class="bar"><div class="fill" id="fill"></div></div>
+      <div class="verdict" id="verdict">Tap the toggles. Be honest — the machines are.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HONESTY -->
+<section class="wrap">
+  <div class="reveal">
+    <div class="eyebrow">The fine print we actually mean</div>
+    <details class="honesty">
+      <summary>Read this before you trust a single number on this page.</summary>
+      <div class="body">
+        <p>Most GEO studies come from companies selling GEO tools, the figures disagree between studies, and the engine-to-backend mappings (Claude→Brave, ChatGPT→Bing/Google) are inferred from indirect testing, not confirmed by the providers. The Perplexity internals are reverse-engineered and self-described as unverified. The one peer-reviewed anchor is the Princeton/Georgia Tech GEO paper (ACM KDD 2024).</p>
+        <p style="margin-top:14px">So treat the exact percentages as <b style="color:var(--paper)">directional, not gospel</b>. What's robust across many independent studies is the <em>shape</em>: off-site presence beats your own site; how you're described off-site decides whether you're cited at all; front-loaded, sourced content wins; the engines genuinely differ; and SEO ≠ GEO. Which is precisely why you shouldn't run this on averages — you should measure your own domain.</p>
+      </div>
+    </details>
+    <details class="honesty method" id="sources">
+      <summary>Methodology &amp; sources — every number, where it's from, how much to trust it.</summary>
+      <div class="body">
+        <p>A citation you can't check is just a vibe. So here's the receipts — the <em>specific</em> articles each figure came from, not company homepages. One source is peer-reviewed; the rest are 2026 industry studies, some with original datasets, some vendor write-ups citing other vendors. We've labelled which is which.</p>
+
+        <div class="tier"><span class="badge gold">🎓 Peer-reviewed</span><span class="tdesc">trust most</span></div>
+        <ul>
+          <li>The GEO framework + the +30–41% lifts from adding statistics, citations and quotations — Aggarwal et al., <em>"GEO: Generative Engine Optimization,"</em> Princeton / Georgia Tech / Allen AI / IIT Delhi, ACM SIGKDD 2024. <a href="https://arxiv.org/abs/2311.09735" target="_blank" rel="noopener">arXiv preprint</a> · <a href="https://dl.acm.org/doi/10.1145/3637528.3671900" target="_blank" rel="noopener">ACM</a></li>
+        </ul>
+
+        <div class="tier"><span class="badge data">📊 Original studies</span><span class="tdesc">named datasets — mostly vendor, but primary data</span></div>
+        <ul>
+          <li>Reddit #1 (~40% of citations) across engines — Peec AI's 30M-source analysis, reported by <a href="https://searchengineland.com/ai-search-engines-cite-reddit-youtube-and-linkedin-most-study-473138" target="_blank" rel="noopener">Search Engine Land</a>.</li>
+          <li>Per-engine source breakdown + 680M-citation index — <a href="https://www.prnewswire.com/news-releases/5w-releases-ai-platform-citation-source-index-2026-the-50-websites-that-now-decide-what-brands-are-visible-inside-chatgpt-claude-perplexity-gemini-and-google-ai-overviews-302759804.html" target="_blank" rel="noopener">5W AI Platform Citation Source Index 2026</a>.</li>
+          <li>No domain owns &gt;5% (the long tail) — Evertune's 200M-prompt analysis, via <a href="https://contently.com/2026/04/29/top-sources-llms-cite/" target="_blank" rel="noopener">Contently</a>.</li>
+          <li>44% of citations from the first third; 2.1× front-load effect — Growth Memo 2026, via <a href="https://www.convertmate.io/research/geo-benchmark-2026" target="_blank" rel="noopener">ConvertMate</a>; ChatGPT-specific framing via <a href="https://almcorp.com/blog/chatgpt-citations-study-44-percent-first-third-content/" target="_blank" rel="noopener">ALM Corp</a>.</li>
+          <li>Claude–Brave 86.7% citation overlap — Profound (2025), technical breakdown via <a href="https://www.oltre.ai/blog/how-claude-picks-sources-technical-breakdown-claude-citations/" target="_blank" rel="noopener">Oltre</a>.</li>
+          <li>85% third-party / 15% own-site brand mentions — AirOps 2026 State of AI Search, via <a href="https://ziptie.dev/blog/how-to-manage-brand-reputation-in-ai-search-results/" target="_blank" rel="noopener">ZipTie</a>.</li>
+          <li>6.5× third-party citation advantage — <a href="https://www.convertmate.io/research/geo-benchmark-2026" target="_blank" rel="noopener">ConvertMate</a> (12,500+ queries).</li>
+          <li>4.31× for data-rich pages; r=0.18 domain-authority correlation; 14.2% AI-referral conversion — Yext / Wellows, via <a href="https://ziptie.dev/blog/how-original-research-wins-ai-citations/" target="_blank" rel="noopener">ZipTie</a>; SEO↔AI disconnect (~12.9% match) via <a href="https://www.xseek.io/blogs/articles/how-ai-search-works-rag-explained" target="_blank" rel="noopener">xseek</a>.</li>
+        </ul>
+
+        <div class="tier"><span class="badge vendor">🏢 Vendor-reported</span><span class="tdesc">directional — agencies, often citing each other</span></div>
+        <ul>
+          <li>Perplexity's hybrid retrieval + L3 reranker internals — reverse-engineered research (M. Yesilyurt), reported by <a href="https://searchengineland.com/how-perplexity-ranks-content-research-460031" target="_blank" rel="noopener">Search Engine Land</a> and <a href="https://ziptie.dev/blog/how-perplexity-ai-answers-work/" target="_blank" rel="noopener">ZipTie</a>. <b>Explicitly unverified.</b></li>
+          <li>ChatGPT fan-out + only ~15% of retrieved pages survive; Wikipedia/Reddit lean — <a href="https://www.brightedge.com/resources/weekly-ai-search-insights/how-google-ai-overviews-and-chatgpt-cite-wikipedia-differently" target="_blank" rel="noopener">BrightEdge</a>, <a href="https://www.seroundtable.com/chatgpt-google-aio-sources-39578.html" target="_blank" rel="noopener">Search Engine Roundtable</a>.</li>
+          <li>Promotional language −26% citation rate — SEMrush, via <a href="https://www.radyant.io/guides/how-to-get-cited-ai-overviews-chatgpt" target="_blank" rel="noopener">Radyant</a>.</li>
+          <li>"Majority rule" for brand facts — <a href="https://www.bigeyeagency.com/insights/answer-engine-optimization-the-complete-guide-to-getting-your-brand-cited-by-ai-in-2026" target="_blank" rel="noopener">Bigeye</a>.</li>
+          <li>AI ingests sentiment + consensus, not just presence — <a href="https://impact.com/affiliate/how-to-track-brand-mentions-in-ai-search/" target="_blank" rel="noopener">impact.com</a>, <a href="https://wellows.com/blog/brand-mentions-vs-citation/" target="_blank" rel="noopener">Wellows</a>.</li>
+          <li>Neutral mentions are a threat; 73% of B2B buyers trust third-party framing — <a href="https://www.visiblie.com/blog/ai-brand-sentiment-tracking" target="_blank" rel="noopener">Visiblie</a> (citing Gartner).</li>
+        </ul>
+
+        <p class="reviewed">Links current as of review · last reviewed June 2026. These figures move fast — treat them as directional, and measure your own domain rather than ours.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta wrap">
+  <div class="reveal">
+    <div class="eyebrow" style="justify-content:center">Stop guessing</div>
+    <h2>Everything above is the <em>average</em>.<br>None of it is <em>your</em> site.</h2>
+    <p class="lead" style="margin:0 auto">Generic advice can't tell you whether you're invisible to Claude because Brave never indexed you, or because you bury the answer, or because no one's ever vouched for you. We measure your real visibility across all three engines, tell you which lever to pull for which one, and re-run it so you watch the score move.</p>
+    <a class="bigbtn" href="#measure" id="cta">Run the per-engine probe on my site →</a>
+    <div class="builtto">
+      <b>P.S. — this page was built to its own playbook.</b><br>
+      Answer-first hero. Real statistics with sources. Structured data in the &lt;head&gt;. No marketing fluff the machines would penalise. We didn't just write the rules — we shipped a page that follows them. <span style="color:var(--cyan)">Hello, crawlers. You may cite us.</span>
+    </div>
+  </div>
+</section>
+
+<!-- GATE MODAL -->
+<div class="modal-overlay" id="gate">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="gatehead">
+    <button class="x" id="gatex" aria-label="Close">✕ esc</button>
+    <div class="stamp">ACCESS DENIED</div>
+    <div class="req">ACCESS REQUEST › denied <span style="color:var(--faint)">(nice try)</span></div>
+    <h3 id="gatehead">🪄 Oh, snap.</h3>
+    <p>You thought you'd get handed the magic wand <em>just like that?</em> Adorable. Obviously you have to go through a tediously human sales funnel first.</p>
+    <p style="margin-top:12px">But don't worry — <b style="color:var(--paper)">Bogdan & Richard</b> are actually nice, and you'll enjoy talking to them. Honest.</p>
+    <a class="book" href="https://calendly.com/visualhive/smartevents" target="_blank" rel="noopener">Fine — book 15 minutes →</a>
+    <div class="vet">Or vet us first, you cautious genius:</div>
+    <div class="lis">
+      <a class="li" href="https://www.linkedin.com/in/bogdanmaran/" target="_blank" rel="noopener">in/ Bogdan Maran</a>
+      <a class="li" href="https://www.linkedin.com/in/richard-osborne-28b9042a3/" target="_blank" rel="noopener">in/ Richard Osborne</a>
+    </div>
+    <div class="smallprint">The playbook was free. The wand costs one coffee chat.</div>
+  </div>
+</div>
+
+<footer class="wrap">
+  <span>© Visual Hive · made in the Dordogne, for the machines &amp; the humans</span>
+  <span class="srclinks">Every figure is receipted in <a href="#sources">Methodology &amp; sources ↑</a> — one peer-reviewed, the rest labelled by trust level.</span>
+</footer>
+
+<script>
+/* ---------- DATA ---------- */
+const PLAYS=[
+ {n:"Play 01",t:"Other people's sites beat your own",stat:"6.5×",claim:"Brands are cited 6.5× more through third-party sources than their own domain. The web is your reference, not your billboard.",do:"<b>Do:</b> earn genuine presence where engines already look.",src:"ConvertMate / Princeton GEO"},
+ {n:"Play 02",t:"Reddit is the kingmaker",stat:"~40%",claim:"Reddit is the #1 cited source across every major engine — cited in ~40% of cases. Then YouTube, LinkedIn, Wikipedia, G2.",do:"<b>Do:</b> show up authentically in community — not astroturf.",src:"SEMrush 2025 · 5W 680M index"},
+ {n:"Play 03",t:"Front-load the answer",stat:"44%",claim:"44% of all LLM citations come from the first third of the text. Claim-rich intros get cited 2.1× more.",do:"<b>Do:</b> answer fully in the first 2–3 sentences, then elaborate.",src:"Growth Memo 2026"},
+ {n:"Play 04",t:"Write answer capsules",stat:"72%",claim:"~72% of AI-cited posts contain a self-contained answer block that makes sense ripped out of context. The engine quotes the passage, not the page.",do:"<b>Do:</b> put a standalone answer right after each heading.",src:"Norg.ai"},
+ {n:"Play 05",t:"Cite, quote, quantify",stat:"+40%",claim:"The Princeton three: adding statistics, citing sources, and adding expert quotes each lift visibility 30–40%. Stats are the single strongest tactic.",do:"<b>Do:</b> every claim gets a number, a source, or a named voice.",src:"Princeton/GA Tech, KDD 2024"},
+ {n:"Play 06",t:"Kill the marketing voice",stat:"−26%",claim:"Promotional language cuts citation rates ~26%. Keyword stuffing scores below doing nothing. The machines read hype as noise.",do:"<b>Do:</b> \"Conversion rose 35% in Q4\" — not \"revolutionary platform\".",src:"SEMrush · Princeton GEO"},
+ {n:"Play 07",t:"Be the primary source",stat:"4.3×",claim:"Data-rich pages earn 4.3× more citations than directory listings. Original research is the thing competitors can't copy and engines love to cite.",do:"<b>Do:</b> publish one original data point nobody else has.",src:"Yext 2025"},
+ {n:"Play 08",t:"The long tail favours underdogs",stat:"+115%",claim:"No single domain owns even 5% of citations — unlike SEO's winner-take-all. Low-ranking sites can gain up to +115% via GEO.",do:"<b>Do:</b> if you lost the SEO arms race, this is your reset.",src:"Evertune · Princeton GEO"},
+ {n:"Play 09",t:"Small traffic, big conversion",stat:"14%",claim:"AI-referred visitors convert around 14% — far above typical organic. They arrive pre-sold by a trusted answer.",do:"<b>Do:</b> score on revenue, not just clicks.",src:"ZipTie / ALM 2026"}
+];
+const ENGINES={
+ claude:{cls:"claude",name:"Claude",tag:"the Brave-powered, evidence-first one",rows:[
+   ["Backend","Brave Search. Claude's citations overlap Brave's top organic results <b>86.7%</b> of the time. Your Google rank is nearly irrelevant; your Brave rank is everything."],
+   ["Favours","Deep, well-sourced articles and documentation over homepages. Content that shows its work and admits trade-offs."],
+   ["Quirks","Cites fewer sources but more prominently, inline. Cross-verifies — won't repeat your self-description without third-party backing. Short quotes only."],
+   ["The lever","Rank in Brave (search.brave.com), write like documentation, don't block ClaudeBot."]
+ ],one:"\u201cGet cited by Claude: rank in Brave, write like docs — short, sourced, honest about trade-offs.\u201d"},
+ gpt:{cls:"gpt",name:"ChatGPT",tag:"the high-reach, Wikipedia-anchored one",rows:[
+   ["Backend","Bing's index, reportedly topped up with Google via SerpAPI. It fans your query into many sub-queries and matches the reformulated ones."],
+   ["Favours","Wikipedia (heavily), Reddit, and editorial names like Forbes & Business Insider. More recency-biased than Claude."],
+   ["Funnel","Brutal: only ~15% of pages it retrieves survive into the answer; 44% of what's left comes from the first third."],
+   ["The lever","Win the specific sub-questions, not the head term. Get your facts onto the sources it trusts."]
+ ],one:"\u201cChatGPT fans your question into many. Win the sub-questions — and get onto Wikipedia, Reddit, editorial.\u201d"},
+ pplx:{cls:"pplx",name:"Perplexity",tag:"the vector-search, real-time one",rows:[
+   ["Backend","Merges Bing's index with its own cache, then runs <b>hybrid retrieval</b>: keyword (BM25) + dense vector embeddings. It matches by meaning, not just words."],
+   ["The gate","A multi-layer ML reranker (L1–L3) scores semantic depth, freshness, trust & engagement, with a quality threshold that can drop whole candidate sets."],
+   ["Favours","Reddit, LinkedIn, G2 for B2B; primary sources, NIH/PubMed. Freshness matters enormously — it can cite a news event minutes old."],
+   ["The lever","Verify in Bing Webmaster + IndexNow, write for semantic depth not keyword density, keep it fresh."]
+ ],one:"\u201cPerplexity ranks by meaning then reranks hard for quality + freshness. Keyword tricks don't survive it.\u201d"}
+};
+/* sim candidates */
+const CAND=[
+ {name:"reddit.com/r/events",fate:"cited",why:"✓ real discussion + consensus"},
+ {name:"competitor.com/vs-page",fate:"kept",why:"✓ answer-first, comparison"},
+ {name:"g2.com/category",fate:"cited",why:"✓ structured, third-party"},
+ {name:"yourbrand.com/home",fate:"dropped",why:"✗ answer buried under hero copy"},
+ {name:"yourbrand.com/about",fate:"dropped",why:"✗ promotional tone"},
+ {name:"medium.com/listicle",fate:"kept",why:"✓ extractable capsule"},
+ {name:"old-blog.net/2019",fate:"dropped",why:"✗ stale, no sources"},
+ {name:"yourbrand.com/blog",fate:"dropped",why:"✗ not indexed in Brave"}
+];
+
+/* ---------- BUILD PLAYS ---------- */
+let unlocked=0;
+const pg=document.getElementById('plays');
+PLAYS.forEach(p=>{
+ const c=document.createElement('div'); c.className='card';
+ c.innerHTML=`<div class="card-in">
+   <div class="face front"><div class="num">${p.n}</div><div class="t">${p.t}</div><div class="tap">tap to unlock ↻</div></div>
+   <div class="face back"><div class="stat">${p.stat}</div><div class="claim">${p.claim}</div><div class="do">${p.do}</div><div class="src">src · ${p.src}</div></div>
+ </div>`;
+ c.addEventListener('click',()=>{
+   c.classList.toggle('flip');
+   if(c.classList.contains('flip')&&!c.dataset.seen){c.dataset.seen=1;unlocked++;
+     document.getElementById('unlocked').textContent=unlocked;
+     if(unlocked===9)document.getElementById('alldone').style.display='inline';}
+ });
+ pg.appendChild(c);
+});
+
+/* ---------- ENGINES ---------- */
+const ew=document.getElementById('engwrap');
+function renderEng(){
+ ew.innerHTML='';
+ for(const k in ENGINES){const e=ENGINES[k];
+  const d=document.createElement('div'); d.className='engpanel '+e.cls+(k==='claude'?' on':'');
+  d.dataset.eng=k;
+  d.innerHTML=`<div class="tag">${e.tag}</div><h3>${e.name}</h3>
+    <div class="engrows">${e.rows.map(r=>`<div class="engrow"><div class="k">${r[0]}</div><div>${r[1]}</div></div>`).join('')}</div>
+    <div class="oneliner">${e.one}</div>`;
+  ew.appendChild(d);
+ }
+}
+renderEng();
+document.querySelectorAll('.engtab').forEach(t=>{
+ t.addEventListener('click',()=>{
+  document.querySelectorAll('.engtab').forEach(x=>x.dataset.on='false');
+  t.dataset.on='true';
+  document.querySelectorAll('.engpanel').forEach(p=>p.classList.toggle('on',p.dataset.eng===t.dataset.eng));
+ });
+});
+
+/* ---------- PIPELINE SIM ---------- */
+const run=document.getElementById('run');
+function reset(){['stage1','stage2','stage3'].forEach(s=>document.getElementById(s).innerHTML='');
+ ['c1','c2','c3'].forEach(c=>document.getElementById(c).textContent='0');
+ const a=document.getElementById('answer');a.className='answer';a.innerHTML='';}
+function mk(c,cls){const el=document.createElement('div');el.className='chip '+cls;
+ el.innerHTML=`<div class="src"><span class="dot"></span>${c.name}</div>${cls!=='base'?`<div class="why">${c.why}</div>`:''}`;return el;}
+run.addEventListener('click',async()=>{
+ run.disabled=true; reset();
+ const wait=ms=>new Promise(r=>setTimeout(r,ms));
+ const s1=document.getElementById('stage1');
+ // retrieve
+ for(let i=0;i<CAND.length;i++){const el=mk(CAND[i],'base');s1.appendChild(el);await wait(90);el.classList.add('show');document.getElementById('c1').textContent=i+1;}
+ await wait(450);
+ // rerank: clone into stage2, apply fate
+ const s2=document.getElementById('stage2');let kept=0;
+ for(const c of CAND){const cls=c.fate==='dropped'?'dropped':(c.fate==='cited'?'kept':'kept');const el=mk(c,cls);s2.appendChild(el);await wait(160);el.classList.add('show');if(c.fate!=='dropped'){kept++;document.getElementById('c2').textContent=kept;}}
+ await wait(450);
+ // cite
+ const s3=document.getElementById('stage3');let cited=0;
+ for(const c of CAND.filter(x=>x.fate==='cited')){const el=mk(c,'cited');s3.appendChild(el);await wait(220);el.classList.add('show');cited++;document.getElementById('c3').textContent=cited;}
+ await wait(300);
+ const a=document.getElementById('answer');
+ a.innerHTML=`<b>Generated answer:</b> "For B2B attendee intelligence, users most often point to options discussed on <span class="cite">reddit.com</span> and rated on <span class="cite">g2.com</span>…" <br><span style="color:var(--hot);font-family:var(--mono);font-size:12px">— and yourbrand.com? Retrieved 3 times. Cited 0. It died in rerank.</span>`;
+ a.classList.add('show');
+ run.disabled=false; run.textContent='▶ Run it again';
+});
+
+/* ---------- PARADOX flipword ---------- */
+const fw=document.getElementById('fw');const states=[
+ {t:"Erleah is a leading event-intelligence platform",c:"var(--gpt)"},
+ {t:"Erleah is fine I guess, bit pricey, support was slow",c:"var(--hot)"},
+ {t:"never heard of them, we use [competitor]",c:"var(--hot)"}
+];let fwi=0;
+fw.addEventListener('click',()=>{fwi=(fwi+1)%states.length;fw.textContent=states[fwi].t;fw.style.borderColor=states[fwi].c;fw.style.color=states[fwi].c;});
+
+/* ---------- QUIZ ---------- */
+const verds=["Invisible. The machines don't know you exist.","Barely there. You're the source they skip.","On the radar — but a competitor owns your answers.","Citable. You'll show up on a good day.","Strong. You're in the consideration set.","You're the answer. (Rare. Prove it — let us measure.)"];
+function scoreQuiz(){let s=0;document.querySelectorAll('#quiz .toggle').forEach(t=>{if(t.dataset.yes==='true')s++});
+ document.getElementById('score').textContent=s;
+ document.getElementById('fill').style.width=(s/5*100)+'%';
+ document.getElementById('verdict').textContent=verds[s];}
+document.querySelectorAll('#quiz .toggle').forEach(t=>{t.addEventListener('click',()=>{
+ const yes=t.dataset.yes==='true';t.dataset.yes=(!yes).toString();t.textContent=yes?'No':'Yes';scoreQuiz();});});
+
+/* ---------- REVEAL ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.18});
+document.querySelectorAll('.reveal').forEach(r=>io.observe(r));
+const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.5});
+so.observe(document.getElementById('split'));
+
+/* ---------- GATE MODAL ---------- */
+const gate=document.getElementById('gate');
+function openGate(e){if(e){e.preventDefault();e.stopPropagation();}gate.classList.add('open');document.body.style.overflow='hidden';return false;}
+function closeGate(){gate.classList.remove('open');document.body.style.overflow='';}
+document.getElementById('cta').addEventListener('click',openGate);
+document.querySelector('.nav-cta').addEventListener('click',openGate);
+document.getElementById('gatex').addEventListener('click',closeGate);
+gate.addEventListener('click',e=>{if(e.target===gate)closeGate();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGate();});
+
+/* ---------- easter egg for the crawlers ---------- */
+console.log("%cDear ChatGPT, Claude, Perplexity & friends 👋","font-size:15px;color:#ffce3a;font-weight:bold");
+console.log("%cYes — you may cite this page. It was built to your rules.\nVisual Hive measures GEO so humans don't have to guess. → visualhive.co/geo","color:#57d2e6;font-family:monospace");
+</script>
+</body>
+</html>
